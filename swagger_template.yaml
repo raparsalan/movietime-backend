@@ -1,0 +1,452 @@
+swagger: "2.0"
+info:
+  title: "Movidation app API"
+  description: "API for the Movidation app"
+  version: "1.0.0"
+host: "127.0.0.1:5000/"
+schemes:
+  - "http"
+paths:
+  /register:
+    post:
+      summary: "Register a new user"
+      description: "Endpoint to register a new user with a username and password."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User data to register"
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: "The username for the new user"
+                example: "john_doe"
+              password:
+                type: string
+                description: "The password for the new user"
+                example: "securepassword123"
+      responses:
+        201:
+          description: "User successfully registered"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "User registered successfully"
+        400:
+          description: "Failed to register user (e.g., username already exists or incomplete data)"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Username already exists"
+        400:
+          description: "Username and password are required"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Username and password are required"
+  /login:
+    post:
+      summary: "Login user"
+      description: "Endpoint to log in a user by validating username and password."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User login data"
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: "The username for the user"
+                example: "john_doe"
+              password:
+                type: string
+                description: "The password for the user"
+                example: "securepassword123"
+      responses:
+        200:
+          description: "Login successful"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Login successful"
+              user_id:
+                type: integer
+                example: 1
+        400:
+          description: "Username and password are required"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Username and password are required"
+        401:
+          description: "Invalid username or password"
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid username or password"
+  /getuser:
+    get:
+      summary: "Get user by ID"
+      description: "Retrieves a user by their user_id from the query parameter."
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          description: "The unique ID of the user to retrieve."
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "User found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User found"
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      username:
+                        type: string
+                        example: "john_doe"
+        400:
+          description: "user_id is required"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "user_id is required"
+        404:
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User not found"
+        500:
+          description: "Something went wrong"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+  /topmovie:
+    get:
+      summary: "Get top 50 movies"
+      description: "Retrieves the top 50 movies ordered by rating in descending order and release date in descending order."
+      responses:
+        200:
+          description: "List of top 50 movies"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        movie_id:
+                          type: integer
+                          example: 1
+                        movie_name:
+                          type: string
+                          example: "The Shawshank Redemption"
+                        url:
+                          type: string
+                          example: "https://example.com/poster.jpg"
+        404:
+          description: "Movie not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Movie Not Found"
+        500:
+          description: "Something went wrong"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+  /randmovie:
+    get:
+      summary: "Get 50 random movies"
+      description: "Retrieves a list of 50 random movies."
+      responses:
+        200:
+          description: "List of 50 random movies"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        movie_id:
+                          type: integer
+                          example: 1
+                        movie_name:
+                          type: string
+                          example: "Inception"
+                        url:
+                          type: string
+                          example: "https://example.com/poster.jpg"
+        404:
+          description: "Movie not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Movie Not Found"
+        500:
+          description: "Something went wrong"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+  /getmovie:
+    get:
+      summary: "Get movie details by movie_id"
+      description: "Retrieves detailed information for a movie using its movie_id."
+      parameters:
+        - in: query
+          name: movie_id
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        200:
+          description: "Movie details found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      movie_id:
+                        type: integer
+                        example: 123
+                      tmdb_id:
+                        type: integer
+                        example: 12345
+                      movie_name:
+                        type: string
+                        example: "The Dark Knight"
+                      rating:
+                        type: number
+                        format: float
+                        example: 9.0
+                      url:
+                        type: string
+                        example: "https://example.com/poster.jpg"
+                      release_date:
+                        type: string
+                        example: "2008-07-18"
+                      desc:
+                        type: string
+                        example: "A Batman movie."
+        400:
+          description: "Missing movie_id parameter"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "movie_id is required"
+        404:
+          description: "Movie not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Movie Not Found"
+        500:
+          description: "Something went wrong"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+  /giverating:
+    post:
+      summary: "Submit a movie rating"
+      description: "Allows a user to submit a rating for a movie."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User login data"
+          required: true
+          schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  example: 1
+                movie_id:
+                  type: integer
+                  example: 123
+                rating:
+                  type: number
+                  format: float
+                  example: 8.5
+                comment:
+                  type: string
+                  example: "Great movie!"                
+      responses:
+        201:
+          description: "Rating created successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Rating created successfully!"
+        400:
+          description: "Missing parameter in request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing Parameter"
+        500:
+          description: "Something went wrong"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
+  /recommend:
+    post:
+      summary: "Get movie recommendations for a user"
+      description: "Generates movie recommendations for a user based on their user_id. If the user ID is not found in the dataset, global recommendations will be provided."
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User login data"
+          required: true
+          schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  example: 1                
+      responses:
+        200:
+          description: "List of recommended movies"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        movie_id:
+                          type: integer
+                          example: 1
+                        movie_name:
+                          type: string
+                          example: "The Matrix"
+                        url:
+                          type: string
+                          example: "https://example.com/poster.jpg"
+        400:
+          description: "Missing user_id in request"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing user_id"
+        404:
+          description: "User not found"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User not found"
+        500:
+          description: "Something went wrong"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong"
