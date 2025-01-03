@@ -28,11 +28,12 @@ python -m venv venv
 ```
 
 ### Aktifkan lingkungan virtual
-Aktifkan lingkungan virtual:
+Aktifkan lingkungan virtual: \n
 Di Windows : 
 ```bash
 .\venv\Scripts\activate
 ```
+Di MacOs
 ```bash
 source venv/bin/activate
 ```
